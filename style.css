@@ -1,3 +1,7 @@
 *{
     font-family: "Geist", sans-serif;
 }
+
+.btn-primary {
+    color: blue;
+}
