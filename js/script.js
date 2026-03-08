@@ -65,7 +65,7 @@ function displayIssue(data) {
         const newCard = document.createElement("div")
         newCard.innerHTML = `
          <div class="card w-90 bg-base-100 card-lg shadow-sm">
-                    <div class="card-body">
+                    <div class="card-body" onClick="openIssueModal(${issue.id})">
                               <div class="flex justify-between">
                             <img src="./assets/Open-Status.png" alt="">
                              <button onClick="openIssueModal(${issue.id})" class="btn btn-xs rounded-full">${issue.priority}</button>
@@ -107,24 +107,27 @@ function displayIssue(data) {
          <div class="modal-box space-y-2">
                <h2 id="modal-titlle" class="font-bold text-2xl">${issueDetails.title}</h2>
                <div class="flex space-x-3">
-                <button class="btn-sm bg-green-500 rounded-md px-2">open</button> <p>Opened by Fahim Ahmed</p> <p >22/02/2026</p>
+                <button class="btn-sm bg-green-500 rounded-md px-2">${issueDetails.status}</button> <p>Opened by ${issueDetails.author}</p> <p >${issueDetails.createdAt}</p>
                </div>
                
                <div class="flex space-x-1">
-                <button  class="btn btn-sm bg-red-300">bug</button>
-                <button  class="btn btn-sm bg-yellow-200">help</button>
+               ${issueDetails.labels
+                .map((singleLabel) => {
+                    return `<button class="btn rounded-full btn-sm btn-dash btn-error">${singleLabel}</button>`;
+                })
+                .join(" ")}
                </div>
                <p  class="text-[#64748B]">${issueDetails.description}</p>
                 
                <div class="card w-96 bg-base-100 card-xs shadow-sm ">
                <div class="flex justify-between">
                      <div>
-                        <p>piority</p>
-                    <button class="btn bg-red-500">high</button>
+                        <p>Assignee:</p>
+                     <h2 class="font-bold">${issueDetails.author}</h2>
                     </div>
                     <div>
-                             <p>assinge</p>
-                    <h2 class="font-bold">Fahim</h2>
+                             <p>priority:</p>
+                       <button class="btn bg-red-500">${issueDetails.priority}</button>
                     </div>
                </div>
             
