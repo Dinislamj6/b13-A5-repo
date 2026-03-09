@@ -216,7 +216,7 @@ function displayOpenIssue() {
         let borderColor = openIssue.status === "open" ? "bg-[#00A96E]" : "bg-[#A855F7]"
         const openCard = document.createElement("div")
         openCard.innerHTML = ` 
-     <div class="card  mx-auto bg-base-100 card-lg shadow-sm">
+     <div class="card w-90 space-x-2  mx-auto bg-base-100 card-lg shadow-sm">
      <div class="h-1 ${borderColor} w-full"> </div>
                     <div class="card-body" onClick="openIssueModal(${openIssue.id})">
                               <div class="flex justify-between">
