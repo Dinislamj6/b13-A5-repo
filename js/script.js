@@ -45,11 +45,13 @@ function switchTab(tab) {
     if (tab === "Open") {
         openCardContainer.classList.remove("hidden")
         displayOpenIssue()
+
     }
 
     if (tab === "Closed") {
         closeCardContainer.classList.remove("hidden")
         displayCloseIssue()
+
     }
 
 }
@@ -72,8 +74,6 @@ async function loadIssue() {
     const res = await fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
     const data = await res.json()
     displayIssue(data)
-    console.log(data)
-
     allData = data.data
     hideLoading()
 
@@ -205,7 +205,6 @@ document.getElementById("btn-search").addEventListener("click", () => {
 //open issue function
 
 function displayOpenIssue() {
-
     const openIssusFilter = allData.filter(issue => issue.status.toLowerCase() == "open")
     const openIssue = openIssusFilter.length
     const issuesCount = document.getElementById("issues-count")
@@ -216,7 +215,7 @@ function displayOpenIssue() {
         let borderColor = openIssue.status === "open" ? "bg-[#00A96E]" : "bg-[#A855F7]"
         const openCard = document.createElement("div")
         openCard.innerHTML = ` 
-     <div class="card w-90 bg-base-100 card-lg shadow-sm">
+     <div class="card w-90 mx-auto bg-base-100 card-md shadow-sm">
      <div class="h-1 ${borderColor} w-full"> </div>
                     <div class="card-body" onClick="openIssueModal(${openIssue.id})">
                               <div class="flex justify-between">
@@ -249,6 +248,7 @@ function displayOpenIssue() {
         openCardContainer.append(openCard)
 
     })
+
 }
 
 
