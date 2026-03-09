@@ -52,32 +52,25 @@
     <!-- button section -->
     <section class="all-btn flex space-x-4 w-10/12 h-15 bg-base-200 mx-auto mt-5 rounded-md p-4">
 
-        <div id="all-container">
-            <button id="tab-All" onclick="switchTab ('All')" class="btn btn-sm btn-primary">All</button>
-        </div>
-        <div id="open-container">
-            <button id="tab-Open" onclick="switchTab ('Open')" class="btn btn-sm">Open</button>
-        </div>
-        <div id="close-container">
-            <button id="tab-Closed" onclick="switchTab('Closed')" class="btn btn-sm">Closed</button>
-        </div>
+<button id="tab-All" onclick="switchTab('All')" class="btn btn-sm btn-primary">All</button>
 
+<button id="tab-Open" onclick="switchTab('Open')" class="btn btn-sm">Open</button>
 
+<button id="tab-Closed" onclick="switchTab('Closed')" class="btn btn-sm">Closed</button>
 
-    </section>
-
+</section>
     <!-- main section -->
     <main>
         <section class="w-10/12 min-h-screen bg-base-200 mx-auto mt-5 shadow-lg">
             <!-- 50 issus -->
             <div class="all-issus">
                 <!-- parent div -->
-               <div class="flex justify-between">
+            
 
-                 <div class="flex space-x-2 pl-2">
+                 <div  class="flex space-x-2 pl-2">
                     <img src="./assets/Aperture.png" alt="">
                         <div>
-                        <h2 class="font-semibold text-xl">50 Issues</h2>
+                        <h2  id="issues-count" class="font-semibold text-xl">50 Issues</h2>
                         <p class="text-[#64748B]">Track and manage your project issues</p>
                     </div>
                  
@@ -88,10 +81,7 @@
 
 
                
-               <div>
-                <!-- open and close  -->
-               
-               </div>
+              
 
 
 
@@ -99,13 +89,14 @@
                
             
             
-            </div>
+    
               
 
                 <hr>
 
-
+                
                 <!-- card section -->
+
                 <section id="cardContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
                     <!-- <div class="card w-90 bg-base-100 card-lg shadow-sm">
@@ -133,6 +124,15 @@
                     </div>
                 </div>  -->
 
+                
+                </section>
+                  
+                <!-- open card container -->
+                <section id="openCardContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                </section>
+
+                <!-- close card container -->
+                <section id="closeCardContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
                 </section>
 

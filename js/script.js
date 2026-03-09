@@ -1,9 +1,12 @@
 const cardContainer = document.getElementById("cardContainer");
 const loadingSpinner = document.getElementById("loadingSpinner");
 const issusDetailsModal = document.getElementById("issus-details-modal")
+const openCardContainer = document.getElementById("openCardContainer")
+const closeCardContainer = document.getElementById("closeCardContainer")
+let allData = []
 let currentTab = "All"
-const tabActive = ["bg-primary" , "border-primary","text-white"]
-const tabInactive = ["bg-transparent","text-slate-700" ,"border-state-200"]
+const tabActive = ["bg-primary", "border-primary", "text-white"]
+const tabInactive = ["bg-transparent", "text-slate-700", "border-state-200"]
 
 
 
@@ -17,23 +20,68 @@ const openContainer = document.getElementById("open-container")
 const closeContainer = document.getElementById("close-container")
 
 
-function switchTab (tab) {
-//    console.log(tab)
-   const tabs = ["All" , "Open","Closed"]
+// function switchTab(tab) {
+//     //    console.log(tab)
+//     const tabs = ["All", "Open", "Closed"]
 
-   for (const t of tabs){
-     const tabName = document.getElementById("tab-"+ t)
-     if(t === tab){
-        tabName.classList.remove(...tabInactive)
-        tabName.classList.add(...tabActive)
-     }else{
-        tabName.classList.add(...tabInactive)
-        tabName.classList.remove(...tabActive)
-     }
-   }
-   
-   
-   
+
+//     for (const t of tabs) {
+//         const tabName = document.getElementById("tab-" + t)
+//         if (t === tab) {
+//             tabName.classList.remove(...tabInactive)
+//             tabName.classList.add(...tabActive)
+//         } else {
+//             tabName.classList.add(...tabInactive)
+//             tabName.classList.remove(...tabActive)
+//         }
+//     }
+
+
+//     if (tab === "Open") {
+//         displayOpenIssue()
+//     }
+//     if (tab === "Closed"){
+//         displayCloseIssue()
+//     }
+
+
+// }
+function switchTab(tab){
+
+const tabs = ["All","Open","Closed"]
+
+for(const t of tabs){
+
+const tabBtn = document.getElementById("tab-"+t)
+
+if(t === tab){
+tabBtn.classList.add(...tabActive)
+tabBtn.classList.remove(...tabInactive)
+}
+else{
+tabBtn.classList.remove(...tabActive)
+tabBtn.classList.add(...tabInactive)
+}
+
+}
+
+cardContainer.classList.add("hidden")
+openCardContainer.classList.add("hidden")
+closeCardContainer.classList.add("hidden")
+
+if(tab === "All"){
+cardContainer.classList.remove("hidden")
+}
+
+if(tab === "Open"){
+openCardContainer.classList.remove("hidden")
+displayOpenIssue()
+}
+
+if(tab === "Closed"){
+closeCardContainer.classList.remove("hidden")
+displayCloseIssue()
+}
 
 }
 switchTab(currentTab)
@@ -53,18 +101,28 @@ async function loadIssue() {
     const res = await fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
     const data = await res.json()
     displayIssue(data)
+    console.log(data)
+
+    allData = data.data
     hideLoading()
-    
+
 }
 loadIssue()
 
 function displayIssue(data) {
-    cardContainer.innerHTML = "" ;
 
+       const allIssue = data.data.length
+    const issuesCount = document.getElementById("issues-count")
+    issuesCount.innerText = `${allIssue} Issues`
+
+    cardContainer.innerHTML = "";
     data.data.forEach(issue => {
+      
         const newCard = document.createElement("div")
+        let borderColor = issue.status === "open" ? "bg-green-300" : "bg-blue-300"
         newCard.innerHTML = `
          <div class="card w-90 bg-base-100 card-lg shadow-sm">
+         <div class="h-1 ${borderColor} w-full"> </div>
                     <div class="card-body" onClick="openIssueModal(${issue.id})">
                               <div class="flex justify-between">
                             <img src="./assets/Open-Status.png" alt="">
@@ -96,14 +154,14 @@ function displayIssue(data) {
     })
 }
 
- async function openIssueModal (issueId){
-      const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${issueId}`)
-      const data = await res.json()
+async function openIssueModal(issueId) {
+    const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${issueId}`)
+    const data = await res.json()
 
-      const issueDetails = data.data
-     issusDetailsModal.innerHTML = ``
-       const newDetail = document.createElement('div')
-       newDetail.innerHTML =` 
+    const issueDetails = data.data
+    issusDetailsModal.innerHTML = ``
+    const newDetail = document.createElement('div')
+    newDetail.innerHTML = ` 
          <div class="modal-box space-y-2">
                <h2 id="modal-titlle" class="font-bold text-2xl">${issueDetails.title}</h2>
                <div class="flex space-x-3">
@@ -112,10 +170,10 @@ function displayIssue(data) {
                
                <div class="flex space-x-1">
                ${issueDetails.labels
-                .map((singleLabel) => {
-                    return `<button class="btn rounded-full btn-sm btn-dash btn-error">${singleLabel}</button>`;
-                })
-                .join(" ")}
+            .map((singleLabel) => {
+                return `<button class="btn rounded-full btn-sm btn-dash btn-error">${singleLabel}</button>`;
+            })
+            .join(" ")}
                </div>
                <p  class="text-[#64748B]">${issueDetails.description}</p>
                 
@@ -141,28 +199,135 @@ function displayIssue(data) {
                 </div>
             </div>
        `
-         issusDetailsModal.append(newDetail)
+    issusDetailsModal.append(newDetail)
 
-     issusDetailsModal.showModal()
+    issusDetailsModal.showModal()
 }
- 
+
 
 
 // search related kaj
 
-document.getElementById("btn-search").addEventListener("click" , () =>{
+document.getElementById("btn-search").addEventListener("click", () => {
     const input = document.getElementById("input-search")
     const searchValue = input.value.trim().toLowerCase()
     console.log(searchValue)
 
     fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issues/search?q=${searchValue}`)
-    .then(res => res.json())
-    .then(data => {
-      displayIssue(data)
-    
-    })
-     
+        .then(res => res.json())
+        .then(data => {
+            displayIssue(data)
 
-    
+        })
+
+
+
 })
+
+// const openIsse = data.data
+// const openfileter =openIsse.filter(issue => issue.status.toLowerCase() === "open")
+
+function displayOpenIssue() {
+
+    const openIssusFilter = allData.filter(issue => issue.status.toLowerCase() == "open")
+    const openIssue = openIssusFilter.length
+    const issuesCount = document.getElementById("issues-count")
+    issuesCount.innerText = `${openIssue} Issues`
+
+    openCardContainer.innerHTML = ''
+    openIssusFilter.forEach(openIssue => {
+         let borderColor = openIssue.status === "open" ? "bg-green-300" : "bg-blue-300"
+         const openCard = document.createElement("div")
+    openCard.innerHTML = ` 
+     <div class="card w-90 bg-base-100 card-lg shadow-sm">
+     <div class="h-1 ${borderColor} w-full"> </div>
+                    <div class="card-body" onClick="openIssueModal(${openIssue.id})">
+                              <div class="flex justify-between">
+                            <img src="./assets/Open-Status.png" alt="">
+                             <button onClick="openIssueModal(${openIssue.id})" class="btn btn-xs rounded-full">${openIssue.priority}</button>
+                        </div>
+                        <h2 class="font-bold">${openIssue.title}</h2>
+                        <p class="text-[#64748B]">${openIssue.description}</p>
+                          <div class="flex gap-3">
+                           ${openIssue.labels
+            .map((singleLabel) => {
+                return `<button class="btn rounded-full btn-sm btn-dash btn-error">${singleLabel}</button>`;
+            })
+            .join(" ")}
+                      
+                        </div>
+              
+                        <hr>
+                           <div class="flex justify-between space-x-20">
+                          <p class="text-[#64748B]">${openIssue.author}</p>
+                        <p class="text-[#64748B]">${openIssue.createdAt}</p>
+                       </div>
+                       <div class="flex justify-between space-x-20">
+                          <p class="text-[#64748B]">${openIssue.assignee}</p>
+                        <p class="text-[#64748B]">${openIssue.updatedAt}</p>
+                       </div>
+                    </div>
+                </div> 
+        `
+    openCardContainer.append(openCard)
+
+    })
+}
+
+function displayCloseIssue() {
+
+     const closeIssusFilter = allData.filter(issue => issue.status.toLowerCase() == "closed")
+     const closeIssue = closeIssusFilter.length
+     const issuesCount = document.getElementById("issues-count")
+    issuesCount.innerHTML= `${closeIssue} Issues`
+
+
+
+      closeCardContainer.innerHTML = ""
+     closeIssusFilter.forEach(closeIssue => {
+         let borderColor = closeIssue.status === "open" ? "bg-green-300" : "bg-blue-300"
+        const closeCard = document.createElement("div")
+        closeCard.innerHTML = ` 
+         <div class="card w-90 bg-base-100 card-lg shadow-sm">
+         <div class="h-1 ${borderColor} w-full"> </div>
+                    <div class="card-body" onClick="openIssueModal(${closeIssue.id})">
+                              <div class="flex justify-between">
+                            <img src="./assets/Open-Status.png" alt="">
+                             <button onClick="openIssueModal(${closeIssue.id})" class="btn btn-xs rounded-full">${closeIssue.priority}</button>
+                        </div>
+                        <h2 class="font-bold">${closeIssue.title}</h2>
+                        <p class="text-[#64748B]">${closeIssue.description}</p>
+                                       <div class="flex gap-3">
+                           ${closeIssue.labels
+            .map((singleLabel) => {
+                return `<button class="btn rounded-full btn-sm btn-dash btn-error">${singleLabel}</button>`;
+            })
+            .join(" ")}
+                      
+                        </div>
+              
+                        <hr>
+                
+                           <div class="flex justify-between space-x-20">
+                          <p class="text-[#64748B]">${closeIssue.author}</p>
+                        <p class="text-[#64748B]">${closeIssue.createdAt}</p>
+                       </div>
+                       <div class="flex justify-between space-x-20">
+                          <p class="text-[#64748B]">${closeIssue.assignee}</p>
+                        <p class="text-[#64748B]">${closeIssue.updatedAt}</p>
+                       </div>
+                    </div>
+                </div> 
+
+
+        `
+         closeCardContainer.append(closeCard)
+     })
+     
+}
+
+
+
+
+
 
