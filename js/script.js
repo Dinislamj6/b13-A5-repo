@@ -71,6 +71,7 @@ closeCardContainer.classList.add("hidden")
 
 if(tab === "All"){
 cardContainer.classList.remove("hidden")
+ loadIssue()
 }
 
 if(tab === "Open"){
