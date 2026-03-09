@@ -114,12 +114,13 @@ function displayIssue(data) {
        const allIssue = data.data.length
     const issuesCount = document.getElementById("issues-count")
     issuesCount.innerText = `${allIssue} Issues`
+  
 
     cardContainer.innerHTML = "";
     data.data.forEach(issue => {
       
         const newCard = document.createElement("div")
-        let borderColor = issue.status === "open" ? "bg-green-300" : "bg-blue-300"
+        let borderColor = issue.status === "open" ? "bg-[#00A96E]" : "bg-[#A855F7]"
         newCard.innerHTML = `
          <div class="card w-90 bg-base-100 card-lg shadow-sm">
          <div class="h-1 ${borderColor} w-full"> </div>
@@ -236,7 +237,7 @@ function displayOpenIssue() {
 
     openCardContainer.innerHTML = ''
     openIssusFilter.forEach(openIssue => {
-         let borderColor = openIssue.status === "open" ? "bg-green-300" : "bg-blue-300"
+         let borderColor = openIssue.status === "open" ? "bg-[#00A96E]" : "bg-[#A855F7]"
          const openCard = document.createElement("div")
     openCard.innerHTML = ` 
      <div class="card w-90 bg-base-100 card-lg shadow-sm">
@@ -285,7 +286,7 @@ function displayCloseIssue() {
 
       closeCardContainer.innerHTML = ""
      closeIssusFilter.forEach(closeIssue => {
-         let borderColor = closeIssue.status === "open" ? "bg-green-300" : "bg-blue-300"
+         let borderColor = closeIssue.status === "open" ? "bg-[#00A96E]" : "bg-[#A855F7]"
         const closeCard = document.createElement("div")
         closeCard.innerHTML = ` 
          <div class="card w-90 bg-base-100 card-lg shadow-sm">
