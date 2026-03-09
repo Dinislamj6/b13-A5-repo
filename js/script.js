@@ -9,80 +9,48 @@ const tabActive = ["bg-primary", "border-primary", "text-white"]
 const tabInactive = ["bg-transparent", "text-slate-700", "border-state-200"]
 
 
-
-// problem acha nicha id gula ta 
 const tabClosed = document.getElementById("tab-Closed")
 const tabOpen = document.getElementById("tab-Open")
 const tabAll = document.getElementById("tab-All")
 
-const allContainer = document.getElementById("all-container")
-const openContainer = document.getElementById("open-container")
-const closeContainer = document.getElementById("close-container")
+// toggle function
+function switchTab(tab) {
 
+    const tabs = ["All", "Open", "Closed"]
 
-// function switchTab(tab) {
-//     //    console.log(tab)
-//     const tabs = ["All", "Open", "Closed"]
+    for (const t of tabs) {
 
+        const tabBtn = document.getElementById("tab-" + t)
 
-//     for (const t of tabs) {
-//         const tabName = document.getElementById("tab-" + t)
-//         if (t === tab) {
-//             tabName.classList.remove(...tabInactive)
-//             tabName.classList.add(...tabActive)
-//         } else {
-//             tabName.classList.add(...tabInactive)
-//             tabName.classList.remove(...tabActive)
-//         }
-//     }
+        if (t === tab) {
+            tabBtn.classList.add(...tabActive)
+            tabBtn.classList.remove(...tabInactive)
+        }
+        else {
+            tabBtn.classList.remove(...tabActive)
+            tabBtn.classList.add(...tabInactive)
+        }
 
+    }
 
-//     if (tab === "Open") {
-//         displayOpenIssue()
-//     }
-//     if (tab === "Closed"){
-//         displayCloseIssue()
-//     }
+    cardContainer.classList.add("hidden")
+    openCardContainer.classList.add("hidden")
+    closeCardContainer.classList.add("hidden")
 
+    if (tab === "All") {
+        cardContainer.classList.remove("hidden")
+        loadIssue()
+    }
 
-// }
-function switchTab(tab){
+    if (tab === "Open") {
+        openCardContainer.classList.remove("hidden")
+        displayOpenIssue()
+    }
 
-const tabs = ["All","Open","Closed"]
-
-for(const t of tabs){
-
-const tabBtn = document.getElementById("tab-"+t)
-
-if(t === tab){
-tabBtn.classList.add(...tabActive)
-tabBtn.classList.remove(...tabInactive)
-}
-else{
-tabBtn.classList.remove(...tabActive)
-tabBtn.classList.add(...tabInactive)
-}
-
-}
-
-cardContainer.classList.add("hidden")
-openCardContainer.classList.add("hidden")
-closeCardContainer.classList.add("hidden")
-
-if(tab === "All"){
-cardContainer.classList.remove("hidden")
- loadIssue()
-}
-
-if(tab === "Open"){
-openCardContainer.classList.remove("hidden")
-displayOpenIssue()
-}
-
-if(tab === "Closed"){
-closeCardContainer.classList.remove("hidden")
-displayCloseIssue()
-}
+    if (tab === "Closed") {
+        closeCardContainer.classList.remove("hidden")
+        displayCloseIssue()
+    }
 
 }
 switchTab(currentTab)
@@ -92,11 +60,13 @@ function showLoading() {
     loadingSpinner.classList.remove("hidden")
     cardContainer.innerHTML = "";
 }
+
 function hideLoading() {
     loadingSpinner.classList.add("hidden")
 
 }
 
+// all issue API function 
 async function loadIssue() {
     showLoading()
     const res = await fetch("https://phi-lab-server.vercel.app/api/v1/lab/issues")
@@ -110,16 +80,18 @@ async function loadIssue() {
 }
 loadIssue()
 
+
+// all issue function
 function displayIssue(data) {
 
-       const allIssue = data.data.length
+    const allIssue = data.data.length
     const issuesCount = document.getElementById("issues-count")
     issuesCount.innerText = `${allIssue} Issues`
-  
+
 
     cardContainer.innerHTML = "";
     data.data.forEach(issue => {
-      
+
         const newCard = document.createElement("div")
         let borderColor = issue.status === "open" ? "bg-[#00A96E]" : "bg-[#A855F7]"
         newCard.innerHTML = `
@@ -156,6 +128,8 @@ function displayIssue(data) {
     })
 }
 
+
+//modal function
 async function openIssueModal(issueId) {
     const res = await fetch(`https://phi-lab-server.vercel.app/api/v1/lab/issue/${issueId}`)
     const data = await res.json()
@@ -208,7 +182,7 @@ async function openIssueModal(issueId) {
 
 
 
-// search related kaj
+// search related function
 
 document.getElementById("btn-search").addEventListener("click", () => {
     const input = document.getElementById("input-search")
@@ -226,8 +200,9 @@ document.getElementById("btn-search").addEventListener("click", () => {
 
 })
 
-// const openIsse = data.data
-// const openfileter =openIsse.filter(issue => issue.status.toLowerCase() === "open")
+
+
+//open issue function
 
 function displayOpenIssue() {
 
@@ -238,9 +213,9 @@ function displayOpenIssue() {
 
     openCardContainer.innerHTML = ''
     openIssusFilter.forEach(openIssue => {
-         let borderColor = openIssue.status === "open" ? "bg-[#00A96E]" : "bg-[#A855F7]"
-         const openCard = document.createElement("div")
-    openCard.innerHTML = ` 
+        let borderColor = openIssue.status === "open" ? "bg-[#00A96E]" : "bg-[#A855F7]"
+        const openCard = document.createElement("div")
+        openCard.innerHTML = ` 
      <div class="card w-90 bg-base-100 card-lg shadow-sm">
      <div class="h-1 ${borderColor} w-full"> </div>
                     <div class="card-body" onClick="openIssueModal(${openIssue.id})">
@@ -252,10 +227,10 @@ function displayOpenIssue() {
                         <p class="text-[#64748B]">${openIssue.description}</p>
                           <div class="flex gap-3">
                            ${openIssue.labels
-            .map((singleLabel) => {
-                return `<button class="btn rounded-full btn-sm btn-dash btn-error">${singleLabel}</button>`;
-            })
-            .join(" ")}
+                .map((singleLabel) => {
+                    return `<button class="btn rounded-full btn-sm btn-dash btn-error">${singleLabel}</button>`;
+                })
+                .join(" ")}
                       
                         </div>
               
@@ -271,23 +246,26 @@ function displayOpenIssue() {
                     </div>
                 </div> 
         `
-    openCardContainer.append(openCard)
+        openCardContainer.append(openCard)
 
     })
 }
 
+
+//close issue function
+
 function displayCloseIssue() {
 
-     const closeIssusFilter = allData.filter(issue => issue.status.toLowerCase() == "closed")
-     const closeIssue = closeIssusFilter.length
-     const issuesCount = document.getElementById("issues-count")
-    issuesCount.innerHTML= `${closeIssue} Issues`
+    const closeIssusFilter = allData.filter(issue => issue.status.toLowerCase() == "closed")
+    const closeIssue = closeIssusFilter.length
+    const issuesCount = document.getElementById("issues-count")
+    issuesCount.innerHTML = `${closeIssue} Issues`
 
 
 
-      closeCardContainer.innerHTML = ""
-     closeIssusFilter.forEach(closeIssue => {
-         let borderColor = closeIssue.status === "open" ? "bg-[#00A96E]" : "bg-[#A855F7]"
+    closeCardContainer.innerHTML = ""
+    closeIssusFilter.forEach(closeIssue => {
+        let borderColor = closeIssue.status === "open" ? "bg-[#00A96E]" : "bg-[#A855F7]"
         const closeCard = document.createElement("div")
         closeCard.innerHTML = ` 
          <div class="card w-90 bg-base-100 card-lg shadow-sm">
@@ -301,10 +279,10 @@ function displayCloseIssue() {
                         <p class="text-[#64748B]">${closeIssue.description}</p>
                                        <div class="flex gap-3">
                            ${closeIssue.labels
-            .map((singleLabel) => {
-                return `<button class="btn rounded-full btn-sm btn-dash btn-error">${singleLabel}</button>`;
-            })
-            .join(" ")}
+                .map((singleLabel) => {
+                    return `<button class="btn rounded-full btn-sm btn-dash btn-error">${singleLabel}</button>`;
+                })
+                .join(" ")}
                       
                         </div>
               
@@ -323,9 +301,9 @@ function displayCloseIssue() {
 
 
         `
-         closeCardContainer.append(closeCard)
-     })
-     
+        closeCardContainer.append(closeCard)
+    })
+
 }
 
 
